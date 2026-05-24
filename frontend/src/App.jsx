@@ -47,7 +47,9 @@ useEffect(() => {
 
       // If already denied
       if (permission.state === "denied") {
-        toast.error("Location permission blocked");
+        toast.error(
+  "Location access blocked. Please enable it from browser site settings."
+);
         return;
       }
 
