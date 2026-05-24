@@ -175,7 +175,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="h-16 flex items-center gap-4 px-4 md:px-8 lg:px-16 bg-zinc-950 w-full border-b border-white/10 shadow-lg sticky top-0 z-50 text-white">
+    <nav className="h-16 flex items-center justify-between gap-4 px-4 md:px-8 lg:px-16 bg-zinc-950 w-full border-b border-white/10 shadow-lg sticky top-0 z-50 text-white">
       {/* LEFT SECTION */}
       <div className="flex items-center shrink-0">
         <img
