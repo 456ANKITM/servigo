@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: process.env.ORIGIN || "http://localhost:5173" || "capacitor://localhost" || "http://localhost",
+    origin: process.env.ORIGIN || "http://localhost:5173" ,
     credentials: true,
   })
 );
