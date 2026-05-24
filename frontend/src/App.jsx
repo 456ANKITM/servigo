@@ -35,47 +35,71 @@ const App = () => {
  console.log(userData)
  
 
-  useEffect(()=>{
+useEffect(() => {
+  if (!user) return;
 
-    if (!user) return;
-    if(!navigator.geolocation){
-      toast.error("geolocation is not supported by your browser")
-      return;
-    }
-    // Ask For a location
-    navigator.geolocation.getCurrentPosition(
-      async  (position) => {
-        try {
-          const {latitude, longitude} = position.coords;
-         let res =  await updateLocation({
-            latitude, 
-            longitude
-          }).unwrap();
-        } catch (error) {
-          toast.error(error?.data?.message || "Failed to update the location")
-        }
-      },
-       
-       (error) => {
-      if (error.code === error.PERMISSION_DENIED) {
-        toast.error("Location permission denied ❌");
-      } else if (error.code === error.POSITION_UNAVAILABLE) {
-        toast.error("Location unavailable");
-      } else if (error.code === error.TIMEOUT) {
-        toast.error("Location request timed out");
-      } else {
-        toast.error("Failed to get location");
+  const requestLocation = async () => {
+    try {
+      // Check permission status first
+      const permission = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      // If already denied
+      if (permission.state === "denied") {
+        toast.error("Location permission blocked");
+        return;
       }
-    },
 
-    {
-      enableHighAccuracy: true, 
-      timeout: 10000,           
-      maximumAge: 0,            
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+
+            await updateLocation({
+              latitude,
+              longitude,
+            }).unwrap();
+
+          } catch (error) {
+            toast.error(
+              error?.data?.message || "Failed to update location"
+            );
+          }
+        },
+
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              toast.error("Location permission denied");
+              break;
+
+            case error.POSITION_UNAVAILABLE:
+              toast.error("Location unavailable");
+              break;
+
+            case error.TIMEOUT:
+              toast.error("Location request timeout");
+              break;
+
+            default:
+              toast.error("Failed to get location");
+          }
+        },
+
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 1000 * 60 * 5,
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
-    )
-    
-  },[user, updateLocation])
+  };
+
+  requestLocation();
+}, [user?._id]);
 
   useEffect(()=>{
       if(userData?.success){

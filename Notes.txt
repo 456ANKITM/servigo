@@ -1,1 +1,2 @@
 1st Bug: Change the Name and Favicon of Your app 
+2nd Bug: Location Permission denied we need to ask user for the location then get it 
